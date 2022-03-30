@@ -1,5 +1,5 @@
 locals {
-  create = var.create && var.putin_khuylo
+  create = var.create
 
   is_t_instance_type = replace(var.instance_type, "/^t(2|3|3a){1}\\..*$/", "1") == "1" ? true : false
 }
@@ -110,6 +110,14 @@ resource "aws_instance" "this" {
       name    = lookup(var.launch_template, "name", null)
       version = lookup(var.launch_template, "version", null)
     }
+  }
+
+  # Lifecycle hooks cannot be parameterized, therefore we must be opinionated if we want to use them
+  # This is also why we are forced to fork this module from the AWS community Terraform modules
+  # https://github.com/hashicorp/terraform/issues/3116
+  lifecycle {
+    ignore_changes        = [user_data, ami, ebs_optimized]
+    create_before_destroy = true
   }
 
   enclave_options {
@@ -253,6 +261,14 @@ resource "aws_spot_instance_request" "this" {
       name    = lookup(var.launch_template, "name", null)
       version = lookup(var.launch_template, "version", null)
     }
+  }
+
+  # Lifecycle hooks cannot be parameterized, therefore we must be opinionated if we want to use them
+  # This is also why we are forced to fork this module from the AWS community Terraform modules
+  # https://github.com/hashicorp/terraform/issues/3116
+  lifecycle {
+    ignore_changes        = [user_data, ami, ebs_optimized]
+    create_before_destroy = true
   }
 
   enclave_options {
