@@ -116,7 +116,7 @@ resource "aws_instance" "this" {
   # This is also why we are forced to fork this module from the AWS community Terraform modules
   # https://github.com/hashicorp/terraform/issues/3116
   lifecycle {
-    ignore_changes        = [user_data, ami, ebs_optimized]
+    ignore_changes        = [user_data, ami, ebs_optimized, volume_tags]
     create_before_destroy = true
   }
 
@@ -267,7 +267,7 @@ resource "aws_spot_instance_request" "this" {
   # This is also why we are forced to fork this module from the AWS community Terraform modules
   # https://github.com/hashicorp/terraform/issues/3116
   lifecycle {
-    ignore_changes        = [user_data, ami, ebs_optimized]
+    ignore_changes        = [user_data, ami, ebs_optimized, volume_tags]
     create_before_destroy = true
   }
 
